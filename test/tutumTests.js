@@ -12,6 +12,8 @@ credentials.fake = {
 };
 
 suite('tutum', function () {
+  this.timeout(30 * 1000);
+
   test('is an object.', function () {
     assert.that(tutum, is.ofType('object'));
   });
@@ -115,7 +117,7 @@ suite('tutum', function () {
       });
     });
 
-    test('throws an error if the callback is missing.', function (done) {
+    test('throws an error if the application id is missing.', function (done) {
       tutum.authenticate(credentials, function (err, cloud) {
         assert.that(function () {
           cloud.getApplicationDetails();
@@ -156,6 +158,63 @@ suite('tutum', function () {
     test.skip('returns the application details.', function (done) {
       tutum.authenticate(credentials, function (err, cloud) {
         cloud.getApplicationDetails('', function (err, details) {
+          assert.that(err, is.null());
+          assert.that(details, is.ofType('object'));
+          done();
+        });
+      });
+    });
+  });
+
+  suite('createApplication', function () {
+    test('is a function.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(cloud.createApplication, is.ofType('function'));
+        done();
+      });
+    });
+
+    test('throws an error if the options are missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.createApplication();
+        }, is.throwing('Options are missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the image is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.createApplication({});
+        }, is.throwing('Image is missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the callback is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.createApplication({ image: 'tutum/hello-world' });
+        }, is.throwing('Callback is missing.'));
+        done();
+      });
+    });
+
+    test('returns an error if the credentials are wrong.', function (done) {
+      tutum.authenticate(credentials.fake, function (err, cloud) {
+        cloud.createApplication({ image: 'tutum/hello-world' }, function (err) {
+          assert.that(err, is.not.null());
+          done();
+        });
+      });
+    });
+
+    // Basically, the test works, but it is delayed until an app can be deleted
+    // programmatically.
+    test.skip('returns the details of the created application.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, details) {
           assert.that(err, is.null());
           assert.that(details, is.ofType('object'));
           done();
