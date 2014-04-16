@@ -106,4 +106,61 @@ suite('tutum', function () {
       });
     });
   });
+
+  suite('getApplicationDetails', function () {
+    test('is a function.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(cloud.getApplicationDetails, is.ofType('function'));
+        done();
+      });
+    });
+
+    test('throws an error if the callback is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.getApplicationDetails();
+        }, is.throwing('Application id is missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the callback is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.getApplicationDetails('foo');
+        }, is.throwing('Callback is missing.'));
+        done();
+      });
+    });
+
+    test('returns an error if the credentials are wrong.', function (done) {
+      tutum.authenticate(credentials.fake, function (err, cloud) {
+        cloud.getApplicationDetails('foo', function (err) {
+          assert.that(err, is.not.null());
+          done();
+        });
+      });
+    });
+
+    test('returns an error if the application id does not exist.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.getApplicationDetails('foo', function (err) {
+          assert.that(err, is.not.null());
+          done();
+        });
+      });
+    });
+
+    // Basically, the test works, but it is delayed until an app can be created
+    // and deleted programmatically.
+    test.skip('returns the application details.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.getApplicationDetails('', function (err, details) {
+          assert.that(err, is.null());
+          assert.that(details, is.ofType('object'));
+          done();
+        });
+      });
+    });
+  });
 });
