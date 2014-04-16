@@ -6,13 +6,16 @@ var tutum = require('../lib/tutum');
 
 var credentials = require('./credentials.json');
 
+var timeoutBetweenCalls = 10 * 1000,
+    timeoutForTests = 30 * 1000;
+
 credentials.fake = {
   username: 'foo',
   apiKey: 'bar'
 };
 
 suite('tutum', function () {
-  this.timeout(30 * 1000);
+  this.timeout(timeoutForTests);
 
   test('is an object.', function () {
     assert.that(tutum, is.ofType('object'));
@@ -153,14 +156,18 @@ suite('tutum', function () {
       });
     });
 
-    // Basically, the test works, but it is delayed until an app can be created
-    // and deleted programmatically.
-    test.skip('returns the application details.', function (done) {
+    test('returns the application details.', function (done) {
       tutum.authenticate(credentials, function (err, cloud) {
-        cloud.getApplicationDetails('', function (err, details) {
-          assert.that(err, is.null());
-          assert.that(details, is.ofType('object'));
-          done();
+        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
+          setTimeout(function () {
+            cloud.getApplicationDetails(detailsCreated.uuid, function (err, details) {
+              assert.that(err, is.null());
+              assert.that(details, is.ofType('object'));
+              setTimeout(function () {
+                cloud.terminateApplication(detailsCreated.uuid, done);
+              }, timeoutBetweenCalls);
+            });
+          }, timeoutBetweenCalls);
         });
       });
     });
@@ -210,14 +217,64 @@ suite('tutum', function () {
       });
     });
 
-    // Basically, the test works, but it is delayed until an app can be deleted
-    // programmatically.
-    test.skip('returns the details of the created application.', function (done) {
+    test('returns the details of the created application.', function (done) {
       tutum.authenticate(credentials, function (err, cloud) {
         cloud.createApplication({ image: 'tutum/hello-world' }, function (err, details) {
           assert.that(err, is.null());
           assert.that(details, is.ofType('object'));
+          setTimeout(function () {
+            cloud.terminateApplication(details.uuid, done);
+          }, timeoutBetweenCalls);
+        });
+      });
+    });
+  });
+
+  suite('terminateApplication', function () {
+    test('is a function.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(cloud.terminateApplication, is.ofType('function'));
+        done();
+      });
+    });
+
+    test('throws an error if the application id is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.terminateApplication();
+        }, is.throwing('Application id is missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the callback is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.terminateApplication('foo');
+        }, is.throwing('Callback is missing.'));
+        done();
+      });
+    });
+
+    test('returns an error if the credentials are wrong.', function (done) {
+      tutum.authenticate(credentials.fake, function (err, cloud) {
+        cloud.terminateApplication('foo', function (err) {
+          assert.that(err, is.not.null());
           done();
+        });
+      });
+    });
+
+    test('returns the details of the deleted application.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
+          setTimeout(function () {
+            cloud.terminateApplication(detailsCreated.uuid, function (err, detailsTerminated) {
+              assert.that(err, is.null());
+              assert.that(detailsTerminated, is.ofType('object'));
+              done();
+            });
+          }, timeoutBetweenCalls);
         });
       });
     });
