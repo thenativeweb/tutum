@@ -1,14 +1,14 @@
-# tutum-node
+# tutum
 
-tutum-node is a wrapper around Tutum's API for Node.js.
+tutum is a wrapper around Tutum's API for Node.js.
 
 ## Installation
 
-    $ npm install tutum-node
+    $ npm install tutum
 
 ## Quick start
 
-The first thing you need to do is to integrate tutum-node in your application.
+The first thing you need to do is to integrate tutum in your application.
 
 ```javascript
 var tutum = require('tutum');
