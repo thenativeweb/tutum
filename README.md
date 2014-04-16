@@ -36,6 +36,16 @@ cloud.getApplications(function (err, applications, metadata) {
 });
 ```
 
+Optionally, you can provide query criteria.
+
+```javascript
+cloud.getApplications({ limit: 10 }, function (err, applications, metadata) {
+  // ...
+});
+```
+
+For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#list-all-applications).
+
 ## Running the tests
 
 This module can be built using [Grunt](http://gruntjs.com/). Besides running the tests, Grunt also analyses the code using [JSHint](http://jshint.com/). To run Grunt, go to the folder where you have installed tutum-node and run `grunt`. You need to have [grunt-cli](https://github.com/gruntjs/grunt-cli) installed.

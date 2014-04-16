@@ -21,13 +21,13 @@ suite('tutum', function () {
       assert.that(tutum.authenticate, is.ofType('function'));
     });
 
-    test('throws an error if options are missing.', function () {
+    test('throws an error if the credentials are missing.', function () {
       assert.that(function () {
         tutum.authenticate();
-      }, is.throwing('Authentication options are missing.'));
+      }, is.throwing('Credentials are missing.'));
     });
 
-    test('throws an error if options do not contain the username.', function () {
+    test('throws an error if the credentials do not contain the username.', function () {
       assert.that(function () {
         tutum.authenticate({
           apiKey: credentials.apiKey
@@ -35,7 +35,7 @@ suite('tutum', function () {
       }, is.throwing('Username is missing.'));
     });
 
-    test('throws an error if options do not contain the API key.', function () {
+    test('throws an error if the credentials do not contain the API key.', function () {
       assert.that(function () {
         tutum.authenticate({
           username: credentials.username
@@ -87,6 +87,17 @@ suite('tutum', function () {
     test('returns a list of applications.', function (done) {
       tutum.authenticate(credentials, function (err, cloud) {
         cloud.getApplications(function (err, applications, metadata) {
+          assert.that(err, is.null());
+          assert.that(applications, is.ofType('object'));
+          assert.that(metadata, is.ofType('object'));
+          done();
+        });
+      });
+    });
+
+    test('respects query criteria.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.getApplications({ limit: 10 }, function (err, applications, metadata) {
           assert.that(err, is.null());
           assert.that(applications, is.ofType('object'));
           assert.that(metadata, is.ofType('object'));
