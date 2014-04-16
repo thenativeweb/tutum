@@ -230,6 +230,15 @@ suite('tutum', function () {
     });
   });
 
+  suite('updateApplication', function () {
+  });
+
+  suite('startApplication', function () {
+  });
+
+  suite('stopApplication', function () {
+  });
+
   suite('terminateApplication', function () {
     test('is a function.', function (done) {
       tutum.authenticate(credentials, function (err, cloud) {
@@ -265,7 +274,7 @@ suite('tutum', function () {
       });
     });
 
-    test('returns the details of the deleted application.', function (done) {
+    test('returns the details of the terminated application.', function (done) {
       tutum.authenticate(credentials, function (err, cloud) {
         cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
           setTimeout(function () {
