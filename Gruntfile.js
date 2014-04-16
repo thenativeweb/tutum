@@ -21,9 +21,9 @@ module.exports = function (grunt) {
     },
 
     watch: {
+      files: [ '**/*.js', '!node_modules/**/*.js' ],
+      tasks: [ 'default' ],
       options: {
-        files: [ '**/*.js', '!node_modules/**/*.js' ],
-        tasks: [ 'default' ],
         interrupt: true
       }
     }
