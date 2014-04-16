@@ -42,7 +42,7 @@ This module can be built using [Grunt](http://gruntjs.com/). Besides running the
 
     $ grunt
 
-Please note that for the tests to work you need a Tutum account. Add a file `credentials.json` within the `test` directory and add your credentials in the following format:
+Please note that for the tests to work you need a Tutum account. Add a file with the name `credentials.json` to the `test` directory and deposit your credentials in the following format:
 
 ```javascript
 {
@@ -51,4 +51,4 @@ Please note that for the tests to work you need a Tutum account. Add a file `cre
 }
 ```
 
-The project's `.gitignore` file will make sure that this file is not being committed.
+The file `.gitignore` contains a rule that excludes this file from being committed.
