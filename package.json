@@ -6,6 +6,7 @@
   "main": "lib/tutum.js",
   "private": true,
   "dependencies": {
+    "superagent": "0.17.0"
   },
   "devDependencies": {
     "grunt": "0.4.4",
