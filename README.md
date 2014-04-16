@@ -1,6 +1,6 @@
 # tutum-node
 
-tutum-nodejs is a wrapper around Tutum's API for Node.js.
+tutum-node is a wrapper around Tutum's API for Node.js.
 
 ## Installation
 
