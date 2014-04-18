@@ -6,7 +6,7 @@ var tutum = require('../lib/tutum');
 
 var credentials = require('./credentials.json');
 
-var timeoutBetweenCalls = 30 * 1000,
+var timeoutBetweenCalls = 40 * 1000,
     timeoutForTests = 4 * 60 * 1000;
 
 credentials.fake = {
@@ -298,6 +298,59 @@ suite('tutum', function () {
   });
 
   suite('startApplication', function () {
+    test('is a function.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(cloud.startApplication, is.ofType('function'));
+        done();
+      });
+    });
+
+    test('throws an error if the application id is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.startApplication();
+        }, is.throwing('Application id is missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the callback is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.startApplication('foo');
+        }, is.throwing('Callback is missing.'));
+        done();
+      });
+    });
+
+    test('returns an error if the credentials are wrong.', function (done) {
+      tutum.authenticate(credentials.fake, function (err, cloud) {
+        cloud.startApplication('foo', function (err) {
+          assert.that(err, is.not.null());
+          done();
+        });
+      });
+    });
+
+    test('returns the details of the stopped application.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
+          setTimeout(function () {
+            cloud.stopApplication(detailsCreated.uuid, function () {
+              setTimeout(function () {
+                cloud.startApplication(detailsCreated.uuid, function (err, detailsStarted) {
+                  assert.that(err, is.null());
+                  assert.that(detailsStarted, is.ofType('object'));
+                  setTimeout(function () {
+                    cloud.terminateApplication(detailsCreated.uuid, done);
+                  }, timeoutBetweenCalls);
+                });
+              }, timeoutBetweenCalls);
+            });
+          }, timeoutBetweenCalls);
+        });
+      });
+    });
   });
 
   suite('stopApplication', function () {

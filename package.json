@@ -1,6 +1,6 @@
 {
   "name": "tutum",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "tutum is a wrapper around Tutum's API for Node.js.",
   "author": "Golo Roden <golo.roden@thenativeweb.io> (http://www.thenativeweb.io)",
   "main": "lib/tutum.js",
