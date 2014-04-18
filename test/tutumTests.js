@@ -6,8 +6,8 @@ var tutum = require('../lib/tutum');
 
 var credentials = require('./credentials.json');
 
-var timeoutBetweenCalls = 10 * 1000,
-    timeoutForTests = 30 * 1000;
+var timeoutBetweenCalls = 30 * 1000,
+    timeoutForTests = 4 * 60 * 1000;
 
 credentials.fake = {
   username: 'foo',
@@ -231,6 +231,70 @@ suite('tutum', function () {
   });
 
   suite('updateApplication', function () {
+    test('is a function.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(cloud.updateApplication, is.ofType('function'));
+        done();
+      });
+    });
+
+    test('throws an error if the application id is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.updateApplication();
+        }, is.throwing('Application id is missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the options are missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.updateApplication('foo');
+        }, is.throwing('Options are missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the callback is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          /*jshint -W106 */
+          cloud.updateApplication('foo', { target_num_containers: 2 });
+          /*jshint +W106 */
+        }, is.throwing('Callback is missing.'));
+        done();
+      });
+    });
+
+    test('returns an error if the credentials are wrong.', function (done) {
+      tutum.authenticate(credentials.fake, function (err, cloud) {
+        /*jshint -W106 */
+        cloud.updateApplication('foo', { target_num_containers: 2 }, function (err) {
+          /*jshint +W106 */
+          assert.that(err, is.not.null());
+          done();
+        });
+      });
+    });
+
+    test('returns the details of the updated application.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
+          setTimeout(function () {
+            /*jshint -W106 */
+            cloud.updateApplication(detailsCreated.uuid, { target_num_containers: 2 }, function (err, detailsUpdated) {
+              /*jshint +W106 */
+              assert.that(err, is.null());
+              assert.that(detailsUpdated, is.ofType('object'));
+              setTimeout(function () {
+                cloud.terminateApplication(detailsCreated.uuid, done);
+              }, timeoutBetweenCalls);
+            });
+          }, timeoutBetweenCalls);
+        });
+      });
+    });
   });
 
   suite('startApplication', function () {

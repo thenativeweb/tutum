@@ -70,6 +70,18 @@ cloud.createApplication({ image: 'tutum/hello-world' }, function (err, details) 
 
 For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#create-and-launch-a-new-application).
 
+#### Updating an application
+
+To update an application, call the `updateApplication` function.
+
+```javascript
+cloud.updateApplication(applicationId, { target_num_containers: 2 }, function (err, details) {
+  // ...
+});
+```
+
+For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#update-an-application).
+
 #### Terminating an application
 
 To terminate an application, call the `terminateApplication` function.
