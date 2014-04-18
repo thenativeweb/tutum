@@ -82,6 +82,18 @@ cloud.updateApplication(applicationId, { target_num_containers: 2 }, function (e
 
 For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#update-an-application).
 
+#### Stopping an application
+
+To stop an application, call the `stopApplication` function.
+
+```javascript
+cloud.stopApplication(applicationId, function (err, details) {
+  // ...
+});
+```
+
+For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#stop-an-application).
+
 #### Terminating an application
 
 To terminate an application, call the `terminateApplication` function.

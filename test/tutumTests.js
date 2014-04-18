@@ -301,6 +301,55 @@ suite('tutum', function () {
   });
 
   suite('stopApplication', function () {
+    test('is a function.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(cloud.stopApplication, is.ofType('function'));
+        done();
+      });
+    });
+
+    test('throws an error if the application id is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.stopApplication();
+        }, is.throwing('Application id is missing.'));
+        done();
+      });
+    });
+
+    test('throws an error if the callback is missing.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        assert.that(function () {
+          cloud.stopApplication('foo');
+        }, is.throwing('Callback is missing.'));
+        done();
+      });
+    });
+
+    test('returns an error if the credentials are wrong.', function (done) {
+      tutum.authenticate(credentials.fake, function (err, cloud) {
+        cloud.stopApplication('foo', function (err) {
+          assert.that(err, is.not.null());
+          done();
+        });
+      });
+    });
+
+    test('returns the details of the stopped application.', function (done) {
+      tutum.authenticate(credentials, function (err, cloud) {
+        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
+          setTimeout(function () {
+            cloud.stopApplication(detailsCreated.uuid, function (err, detailsStopped) {
+              assert.that(err, is.null());
+              assert.that(detailsStopped, is.ofType('object'));
+              setTimeout(function () {
+                cloud.terminateApplication(detailsCreated.uuid, done);
+              }, timeoutBetweenCalls);
+            });
+          }, timeoutBetweenCalls);
+        });
+      });
+    });
   });
 
   suite('terminateApplication', function () {
