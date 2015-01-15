@@ -2,20 +2,24 @@
   "name": "tutum",
   "version": "0.1.0",
   "description": "tutum is a wrapper around Tutum's API for Node.js.",
-  "author": "Golo Roden <golo.roden@thenativeweb.io> (http://www.thenativeweb.io)",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    }
+  ],
   "main": "lib/tutum.js",
   "dependencies": {
-    "superagent": "0.17.0"
+    "superagent": "0.21.0"
   },
   "devDependencies": {
-    "grunt": "0.4.4",
-    "grunt-contrib-jshint": "0.10.0",
-    "grunt-contrib-watch": "0.6.1",
-    "grunt-mocha-test": "0.10.2",
-    "node-assertthat": "0.0.21"
+    "grunt": "0.4.5",
+    "tourism": "0.10.2",
+    "node-assertthat": "0.2.3"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/goloroden/tutum.git"
-  }
+  },
+  "license": "MIT"
 }

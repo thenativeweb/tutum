@@ -2,15 +2,20 @@
 
 var Tutum = require('../lib/tutum');
 
-var client = new Tutum({
+var tutum = new Tutum({
+  /*eslint-disable no-process-env*/
   username: process.env.TUTUM_USERNAME || '',
   apiKey: process.env.TUTUM_APIKEY || ''
+  /*eslint-enable no-process-env*/
 });
 
-var params = {image: 'tutum/hello-world'};
-client.post('service', params, function(error, response){
-  if (error) {
-    throw error;
+tutum.post('service', {
+  image: 'tutum/hello-world'
+}, function (err, res) {
+  if (err) {
+    throw err;
   }
-  console.log(response);
+  /*eslint-disable no-console*/
+  console.log(res);
+  /*eslint-enable no-console*/
 });

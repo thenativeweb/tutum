@@ -1,7 +1,5 @@
-# Personal files
-credentials.json
-
 # Node.js folders
+*coverage/
 *node_modules/
 
 # Build artefacts
