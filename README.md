@@ -1,5 +1,7 @@
 # tutum
 
+[![wercker status](https://app.wercker.com/status/06ef9657d0cf0423d2c6123b964e39f3/s "wercker status")](https://app.wercker.com/project/bykey/06ef9657d0cf0423d2c6123b964e39f3)
+
 tutum is a wrapper around Tutum's API for Node.js.
 
 ## Installation
@@ -11,112 +13,47 @@ tutum is a wrapper around Tutum's API for Node.js.
 The first thing you need to do is to integrate tutum in your application.
 
 ```javascript
-var tutum = require('tutum');
+var Tutum = require('tutum');
 ```
 
-Then you need to authenticate using your username and your API key. See the [Tutum documentation](http://docs.tutum.co/) if you don't know how to get that key.
+Then you need create a new instance by passing using your username and your API
+key.  See the [Tutum documentation](https://docs.tutum.co/v2/api) if you don't know how
+to get that key.
 
 ```javascript
-tutum.authenticate({ username: 'foo', apiKey: 'bar' }, function (err, cloud) {
-  // ...
+
+var client = new Tutum({
+  username: 'foo',
+  apiKey: 'bar'
 });
 ```
 
-The `cloud` object that is returned then gives you access to all of Tutum's functionality.
-
-### Applications
-
-#### Getting a list of applications
-
-To get a list of applications, call the `getApplications` function.
+You now can preform GET, POST, PATCH and DELETE requests using the helpers.
 
 ```javascript
-cloud.getApplications(function (err, applications, metadata) {
-  // ...
-});
+client.get(path, params, callback);
+client.post(path, params, callback);
+client.patch(path, params, callback);
+client.delete(path, params, callback);
 ```
 
-Optionally, you can provide query criteria.
+Refer to the [documentation](https://docs.tutum.co/v2/api/) to find the
+appropriate method and path for your request.
 
 ```javascript
-cloud.getApplications({ limit: 10 }, function (err, applications, metadata) {
-  // ...
+// [List all successful actions](https://docs.tutum.co/v2/api/#list-all-actions)
+client.get('/action', {state: 'Success'} function(error, response){
+  if (error) throw error;
+  console.log(response);
 });
-```
 
-For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#list-all-applications).
-
-#### Getting application details
-
-To get details for an applications, call the `getApplicationDetails` function.
-
-```javascript
-cloud.getApplicationDetails(applicationId, function (err, details) {
-  // ...
+// [Start a container](https://docs.tutum.co/v2/api/#start-a-container)
+client.post('/container/[UUID]/start', function(error, response){
+  if (error) throw error;
+  console.log(response);
 });
+
 ```
-
-For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#get-application-details).
-
-#### Creating a new application
-
-To create a new application, call the `createApplication` function.
-
-```javascript
-cloud.createApplication({ image: 'tutum/hello-world' }, function (err, details) {
-  // ...
-});
-```
-
-For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#create-and-launch-a-new-application).
-
-#### Updating an application
-
-To update an application, call the `updateApplication` function.
-
-```javascript
-cloud.updateApplication(applicationId, { target_num_containers: 2 }, function (err, details) {
-  // ...
-});
-```
-
-For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#update-an-application).
-
-#### Starting an application
-
-To start an application, call the `startApplication` function.
-
-```javascript
-cloud.startApplication(applicationId, function (err, details) {
-  // ...
-});
-```
-
-For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#stop-an-application).
-
-#### Stopping an application
-
-To stop an application, call the `stopApplication` function.
-
-```javascript
-cloud.stopApplication(applicationId, function (err, details) {
-  // ...
-});
-```
-
-For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#stop-an-application).
-
-#### Terminating an application
-
-To terminate an application, call the `terminateApplication` function.
-
-```javascript
-cloud.terminateApplication(applicationId, function (err, details) {
-  // ...
-});
-```
-
-For details see the [Tutum API documentation](http://docs.tutum.co/reference/api/#terminate-an-application).
 
 ## Running the tests
 
@@ -124,16 +61,6 @@ This module can be built using [Grunt](http://gruntjs.com/). Besides running the
 
     $ grunt
 
-Please note that for the tests to work you need a Tutum account. Add a file with the name `credentials.json` to the `test` directory and deposit your credentials in the following format:
-
-```javascript
-{
-  "username": "foo",
-  "apiKey": "bar"
-}
-```
-
-The file `.gitignore` contains a rule that excludes this file from being committed.
 
 ## License
 
