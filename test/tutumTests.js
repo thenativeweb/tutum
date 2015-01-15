@@ -1,457 +1,80 @@
 'use strict';
 
 var assert = require('node-assertthat');
+var Tutum = require('../lib/tutum');
 
-var tutum = require('../lib/tutum');
+suite('Tutum', function(){
 
-var credentials = require('./credentials.json');
+  suite('constructor', function(){
 
-var timeoutBetweenCalls = 40 * 1000,
-    timeoutForTests = 4 * 60 * 1000;
+    test('is a function', function(){
+      assert.that(Tutum, is.ofType('function'));
+    });
 
-credentials.fake = {
-  username: 'foo',
-  apiKey: 'bar'
-};
+    test('instance is object', function(){
+      assert.that(new Tutum(), is.ofType('object'));
+    });
 
-suite('tutum', function () {
-  this.timeout(timeoutForTests);
+    test('required configuration is present', function(){
+      var config = {
+        foo: 'bar'
+      };
+      var instance = new Tutum(config);
 
-  test('is an object.', function () {
-    assert.that(tutum, is.ofType('object'));
+      assert.that(instance.config.baseEndpoint, is.ofType('string'));
+      assert.that(instance.config.username, is.ofType('string'));
+      assert.that(instance.config.apiKey, is.ofType('string'));
+    });
+
+    test('configuration is extended', function(){
+      var config = {
+        baseEndpoint: 'http://example.com',
+        username: 'foo',
+        apiKey: 'bar'
+      };
+      var instance = new Tutum(config);
+
+      assert.that(instance.config.baseEndpoint, is.equalTo(config.baseEndpoint));
+      assert.that(instance.config.username, is.equalTo(config.username));
+      assert.that(instance.config.apiKey, is.equalTo(config.apiKey));
+    });
+
+    test('authorization string is built', function(){
+      var config = {
+        username: 'foo',
+        apiKey: 'bar'
+      };
+      var instance = new Tutum(config);
+
+      assert.that(
+        instance.config.authorization,
+        is.equalTo(config.username + ':' + config.apiKey)
+      );
+    });
+
   });
 
-  suite('authenticate', function () {
-    test('is a function.', function () {
-      assert.that(tutum.authenticate, is.ofType('function'));
+  suite('instance methods', function(){
+    var instance = new Tutum();
+    test('instance.request is a function', function(){
+      assert.that(instance.request, is.ofType('function'));
     });
 
-    test('throws an error if the credentials are missing.', function () {
-      assert.that(function () {
-        tutum.authenticate();
-      }, is.throwing('Credentials are missing.'));
+    test('instance.get is a function', function(){
+      assert.that(instance.request, is.ofType('function'));
     });
 
-    test('throws an error if the credentials do not contain the username.', function () {
-      assert.that(function () {
-        tutum.authenticate({
-          apiKey: credentials.apiKey
-        });
-      }, is.throwing('Username is missing.'));
+    test('instance.post is a function', function(){
+      assert.that(instance.request, is.ofType('function'));
     });
 
-    test('throws an error if the credentials do not contain the API key.', function () {
-      assert.that(function () {
-        tutum.authenticate({
-          username: credentials.username
-        });
-      }, is.throwing('API key is missing.'));
+    test('instance.patch is a function', function(){
+      assert.that(instance.request, is.ofType('function'));
     });
 
-    test('throws an error if the callback is missing.', function () {
-      assert.that(function () {
-        tutum.authenticate(credentials);
-      }, is.throwing('Callback is missing.'));
-    });
-
-    test('returns a reference to the cloud.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(err, is.null());
-        assert.that(cloud, is.ofType('object'));
-        done();
-      });
-    });
-  });
-
-  suite('getApplications', function () {
-    test('is a function.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(cloud.getApplications, is.ofType('function'));
-        done();
-      });
-    });
-
-    test('throws an error is the callback is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.getApplications();
-        }, is.throwing('Callback is missing.'));
-        done();
-      });
-    });
-
-    test('returns an error if the credentials are wrong.', function (done) {
-      tutum.authenticate(credentials.fake, function (err, cloud) {
-        cloud.getApplications(function (err) {
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns a list of applications.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.getApplications(function (err, applications, metadata) {
-          assert.that(err, is.null());
-          assert.that(applications, is.ofType('object'));
-          assert.that(metadata, is.ofType('object'));
-          done();
-        });
-      });
-    });
-
-    test('respects query criteria.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.getApplications({ limit: 10 }, function (err, applications, metadata) {
-          assert.that(err, is.null());
-          assert.that(applications, is.ofType('object'));
-          assert.that(metadata, is.ofType('object'));
-          done();
-        });
-      });
+    test('instance.delete is a function', function(){
+      assert.that(instance.request, is.ofType('function'));
     });
   });
 
-  suite('getApplicationDetails', function () {
-    test('is a function.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(cloud.getApplicationDetails, is.ofType('function'));
-        done();
-      });
-    });
-
-    test('throws an error if the application id is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.getApplicationDetails();
-        }, is.throwing('Application id is missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the callback is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.getApplicationDetails('foo');
-        }, is.throwing('Callback is missing.'));
-        done();
-      });
-    });
-
-    test('returns an error if the credentials are wrong.', function (done) {
-      tutum.authenticate(credentials.fake, function (err, cloud) {
-        cloud.getApplicationDetails('foo', function (err) {
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns an error if the application id does not exist.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.getApplicationDetails('foo', function (err) {
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns the application details.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
-          setTimeout(function () {
-            cloud.getApplicationDetails(detailsCreated.uuid, function (err, details) {
-              assert.that(err, is.null());
-              assert.that(details, is.ofType('object'));
-              setTimeout(function () {
-                cloud.terminateApplication(detailsCreated.uuid, done);
-              }, timeoutBetweenCalls);
-            });
-          }, timeoutBetweenCalls);
-        });
-      });
-    });
-  });
-
-  suite('createApplication', function () {
-    test('is a function.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(cloud.createApplication, is.ofType('function'));
-        done();
-      });
-    });
-
-    test('throws an error if the options are missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.createApplication();
-        }, is.throwing('Options are missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the image is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.createApplication({});
-        }, is.throwing('Image is missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the callback is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.createApplication({ image: 'tutum/hello-world' });
-        }, is.throwing('Callback is missing.'));
-        done();
-      });
-    });
-
-    test('returns an error if the credentials are wrong.', function (done) {
-      tutum.authenticate(credentials.fake, function (err, cloud) {
-        cloud.createApplication({ image: 'tutum/hello-world' }, function (err) {
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns the details of the created application.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, details) {
-          assert.that(err, is.null());
-          assert.that(details, is.ofType('object'));
-          setTimeout(function () {
-            cloud.terminateApplication(details.uuid, done);
-          }, timeoutBetweenCalls);
-        });
-      });
-    });
-  });
-
-  suite('updateApplication', function () {
-    test('is a function.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(cloud.updateApplication, is.ofType('function'));
-        done();
-      });
-    });
-
-    test('throws an error if the application id is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.updateApplication();
-        }, is.throwing('Application id is missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the options are missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.updateApplication('foo');
-        }, is.throwing('Options are missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the callback is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          /*jshint -W106 */
-          cloud.updateApplication('foo', { target_num_containers: 2 });
-          /*jshint +W106 */
-        }, is.throwing('Callback is missing.'));
-        done();
-      });
-    });
-
-    test('returns an error if the credentials are wrong.', function (done) {
-      tutum.authenticate(credentials.fake, function (err, cloud) {
-        /*jshint -W106 */
-        cloud.updateApplication('foo', { target_num_containers: 2 }, function (err) {
-          /*jshint +W106 */
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns the details of the updated application.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
-          setTimeout(function () {
-            /*jshint -W106 */
-            cloud.updateApplication(detailsCreated.uuid, { target_num_containers: 2 }, function (err, detailsUpdated) {
-              /*jshint +W106 */
-              assert.that(err, is.null());
-              assert.that(detailsUpdated, is.ofType('object'));
-              setTimeout(function () {
-                cloud.terminateApplication(detailsCreated.uuid, done);
-              }, timeoutBetweenCalls);
-            });
-          }, timeoutBetweenCalls);
-        });
-      });
-    });
-  });
-
-  suite('startApplication', function () {
-    test('is a function.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(cloud.startApplication, is.ofType('function'));
-        done();
-      });
-    });
-
-    test('throws an error if the application id is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.startApplication();
-        }, is.throwing('Application id is missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the callback is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.startApplication('foo');
-        }, is.throwing('Callback is missing.'));
-        done();
-      });
-    });
-
-    test('returns an error if the credentials are wrong.', function (done) {
-      tutum.authenticate(credentials.fake, function (err, cloud) {
-        cloud.startApplication('foo', function (err) {
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns the details of the stopped application.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
-          setTimeout(function () {
-            cloud.stopApplication(detailsCreated.uuid, function () {
-              setTimeout(function () {
-                cloud.startApplication(detailsCreated.uuid, function (err, detailsStarted) {
-                  assert.that(err, is.null());
-                  assert.that(detailsStarted, is.ofType('object'));
-                  setTimeout(function () {
-                    cloud.terminateApplication(detailsCreated.uuid, done);
-                  }, timeoutBetweenCalls);
-                });
-              }, timeoutBetweenCalls);
-            });
-          }, timeoutBetweenCalls);
-        });
-      });
-    });
-  });
-
-  suite('stopApplication', function () {
-    test('is a function.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(cloud.stopApplication, is.ofType('function'));
-        done();
-      });
-    });
-
-    test('throws an error if the application id is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.stopApplication();
-        }, is.throwing('Application id is missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the callback is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.stopApplication('foo');
-        }, is.throwing('Callback is missing.'));
-        done();
-      });
-    });
-
-    test('returns an error if the credentials are wrong.', function (done) {
-      tutum.authenticate(credentials.fake, function (err, cloud) {
-        cloud.stopApplication('foo', function (err) {
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns the details of the stopped application.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
-          setTimeout(function () {
-            cloud.stopApplication(detailsCreated.uuid, function (err, detailsStopped) {
-              assert.that(err, is.null());
-              assert.that(detailsStopped, is.ofType('object'));
-              setTimeout(function () {
-                cloud.terminateApplication(detailsCreated.uuid, done);
-              }, timeoutBetweenCalls);
-            });
-          }, timeoutBetweenCalls);
-        });
-      });
-    });
-  });
-
-  suite('terminateApplication', function () {
-    test('is a function.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(cloud.terminateApplication, is.ofType('function'));
-        done();
-      });
-    });
-
-    test('throws an error if the application id is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.terminateApplication();
-        }, is.throwing('Application id is missing.'));
-        done();
-      });
-    });
-
-    test('throws an error if the callback is missing.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        assert.that(function () {
-          cloud.terminateApplication('foo');
-        }, is.throwing('Callback is missing.'));
-        done();
-      });
-    });
-
-    test('returns an error if the credentials are wrong.', function (done) {
-      tutum.authenticate(credentials.fake, function (err, cloud) {
-        cloud.terminateApplication('foo', function (err) {
-          assert.that(err, is.not.null());
-          done();
-        });
-      });
-    });
-
-    test('returns the details of the terminated application.', function (done) {
-      tutum.authenticate(credentials, function (err, cloud) {
-        cloud.createApplication({ image: 'tutum/hello-world' }, function (err, detailsCreated) {
-          setTimeout(function () {
-            cloud.terminateApplication(detailsCreated.uuid, function (err, detailsTerminated) {
-              assert.that(err, is.null());
-              assert.that(detailsTerminated, is.ofType('object'));
-              done();
-            });
-          }, timeoutBetweenCalls);
-        });
-      });
-    });
-  });
 });
