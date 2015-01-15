@@ -8,47 +8,54 @@ tutum is a wrapper around Tutum's API for Node.js.
 
 ## Quick start
 
-The first thing you need to do is to integrate tutum in your application.
+First you need to add a reference to tutum in your application.
 
 ```javascript
 var Tutum = require('tutum');
 ```
 
-Then you need to create a new instance by passing using your username and your API
-key.  See the [Tutum documentation](https://docs.tutum.co/v2/api) if you don't know how
-to get that key.
+Then, you need to call the `Tutum` constructor function to create a new instance. For that you need to specify your username and your API key. For details on where to get them, see the [Tutum documentation](https://docs.tutum.co/v2/api).
 
 ```javascript
 
 var tutum = new Tutum({
-  username: 'foo',
-  apiKey: 'bar'
+  username: '...',
+  apiKey: '...'
 });
 ```
 
-You now can perform `GET`, `POST`, `PATCH` and `DELETE` requests using the helper functions.
+Now you can perform `GET`, `POST`, `PATCH` and `DELETE` requests against the Tutum API using the following helper functions.
 
 ```javascript
-tutum.get(path, options, callback);
-tutum.post(path, options, callback);
-tutum.patch(path, options, callback);
-tutum.delete(path, options, callback);
-```
-
-Refer to the [documentation](https://docs.tutum.co/v2/api/) to find the
-appropriate method and path for your request.
-
-```javascript
-// [List all successful actions](https://docs.tutum.co/v2/api/#list-all-actions)
-tutum.get('/action', { state: 'Success' } function (err, res) {
+tutum.get(path, options, function (err, res) {
   // ...
 });
 
-// [Start a container](https://docs.tutum.co/v2/api/#start-a-container)
+tutum.post(path, options, function (err, res) {
+  // ...
+});
+
+tutum.patch(path, options, function (err, res) {
+  // ...
+});
+
+tutum.delete(path, options, function (err, res) {
+  // ...
+});
+```
+
+Refer to the [Tutum documentation](https://docs.tutum.co/v2/api/) to find the appropriate method and path for your request. The following two samples basically show how to use the API.
+
+```javascript
+// List all successful actions (https://docs.tutum.co/v2/api/#list-all-actions)
+tutum.get('/action', { state: 'Success' }, function (err, res) {
+  // ...
+});
+
+// Start a container (https://docs.tutum.co/v2/api/#start-a-container)
 tutum.post('/container/[UUID]/start', function(err, res) {
   // ...
 });
-
 ```
 
 ## Running the tests
