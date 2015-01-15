@@ -1,7 +1,5 @@
 # tutum
 
-[![wercker status](https://app.wercker.com/status/06ef9657d0cf0423d2c6123b964e39f3/s "wercker status")](https://app.wercker.com/project/bykey/06ef9657d0cf0423d2c6123b964e39f3)
-
 tutum is a wrapper around Tutum's API for Node.js.
 
 ## Installation
