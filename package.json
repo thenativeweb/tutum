@@ -6,6 +6,10 @@
     {
       "name": "Golo Roden",
       "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Desmond Morris",
+      "email": "hi@desmondmorris.com"
     }
   ],
   "main": "lib/tutum.js",
