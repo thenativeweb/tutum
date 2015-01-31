@@ -1,6 +1,6 @@
 {
   "name": "tutum",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "tutum is a wrapper around Tutum's API for Node.js.",
   "contributors": [
     {
