@@ -17,9 +17,9 @@
     "superagent": "0.21.0"
   },
   "devDependencies": {
+    "assertthat": "0.3.0",
     "grunt": "0.4.5",
-    "tourism": "0.10.2",
-    "node-assertthat": "0.2.3"
+    "tourism": "0.11.2"
   },
   "repository": {
     "type": "git",
