@@ -60,9 +60,9 @@ tutum.post('/container/[UUID]/start', function(err, res) {
 
 Please also have a look at the [examples folder](https://github.com/goloroden/tutum/tree/master/examples) for a real-world example.
 
-## Running the tests
+## Running the build
 
-This module can be built using [Grunt](http://gruntjs.com/). Besides running the tests, Grunt also analyses the code using [JSHint](http://jshint.com/). To run Grunt, go to the folder where you have installed tutum and run `grunt`. You need to have [grunt-cli](https://github.com/gruntjs/grunt-cli) installed.
+This module can be built using [Grunt](http://gruntjs.com/). Besides running the tests, this also analyses the code. To run Grunt, go to the folder where you have installed tutum and run `grunt`. You need to have [grunt-cli](https://github.com/gruntjs/grunt-cli) installed.
 
     $ grunt
 
