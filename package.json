@@ -25,5 +25,10 @@
     "type": "git",
     "url": "git://github.com/thenativeweb/tutum.git"
   },
+  "keywords": [
+    "container",
+    "docker",
+    "tutum"
+  ],
   "license": "MIT"
 }
