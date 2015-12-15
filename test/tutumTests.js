@@ -45,9 +45,10 @@ suite('Tutum', function () {
       username: 'foo',
       apiKey: 'bar'
     };
+    var base64Result = 'Zm9vOmJhcg==';
     var tutum = new Tutum(configuration);
 
-    assert.that(tutum.configuration.authorization, is.equalTo(configuration.username + ':' + configuration.apiKey));
+    assert.that(tutum.configuration.authorization, is.equalTo(base64Result));
     done();
   });
 
