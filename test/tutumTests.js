@@ -1,86 +1,87 @@
 'use strict';
 
-var assert = require('assertthat');
-var Tutum = require('../lib/tutum');
+const assert = require('assertthat');
 
-suite('Tutum', function () {
-  test('is a function.', function (done) {
-    assert.that(Tutum, is.ofType('function'));
+const Tutum = require('../lib/tutum');
+
+suite('Tutum', () => {
+  test('is a function.', done => {
+    assert.that(Tutum).is.ofType('function');
     done();
   });
 
-  test('returns an object.', function (done) {
-    assert.that(new Tutum(), is.ofType('object'));
+  test('returns an object.', done => {
+    assert.that(new Tutum()).is.ofType('object');
     done();
   });
 
-  test('provides the configuration variables.', function (done) {
-    var configuration = {
+  test('provides the configuration constiables.', done => {
+    const configuration = {
       foo: 'bar'
     };
-    var tutum = new Tutum(configuration);
+    const tutum = new Tutum(configuration);
 
-    assert.that(tutum.configuration.baseEndpoint, is.ofType('string'));
-    assert.that(tutum.configuration.username, is.ofType('string'));
-    assert.that(tutum.configuration.apiKey, is.ofType('string'));
+    assert.that(tutum.configuration.baseEndpoint).is.ofType('string');
+    assert.that(tutum.configuration.username).is.ofType('string');
+    assert.that(tutum.configuration.apiKey).is.ofType('string');
     done();
   });
 
-  test('sets the configuration to the desired values.', function (done) {
-    var configuration = {
+  test('sets the configuration to the desired values.', done => {
+    const configuration = {
       baseEndpoint: 'http://example.com',
       username: 'foo',
       apiKey: 'bar'
     };
-    var tutum = new Tutum(configuration);
+    const tutum = new Tutum(configuration);
 
-    assert.that(tutum.configuration.baseEndpoint, is.equalTo(configuration.baseEndpoint));
-    assert.that(tutum.configuration.username, is.equalTo(configuration.username));
-    assert.that(tutum.configuration.apiKey, is.equalTo(configuration.apiKey));
+    assert.that(tutum.configuration.baseEndpoint).is.equalTo(configuration.baseEndpoint);
+    assert.that(tutum.configuration.username).is.equalTo(configuration.username);
+    assert.that(tutum.configuration.apiKey).is.equalTo(configuration.apiKey);
     done();
   });
 
-  test('calculates the auth string.', function (done) {
-    var configuration = {
+  test('calculates the auth string.', done => {
+    const configuration = {
       username: 'foo',
       apiKey: 'bar'
     };
-    var base64Result = 'Zm9vOmJhcg==';
-    var tutum = new Tutum(configuration);
+    const base64Result = 'Zm9vOmJhcg==';
+    const tutum = new Tutum(configuration);
 
-    assert.that(tutum.configuration.authorization, is.equalTo(base64Result));
+    assert.that(tutum.configuration.authorization).is.equalTo(base64Result);
     done();
   });
 
-  suite('instance', function () {
-    var tutum;
+  suite('instance', () => {
+    let tutum;
 
-    suiteSetup(function () {
+    suiteSetup(() => {
       tutum = new Tutum();
     });
 
-    test('request is a function.', function (done) {
-      assert.that(tutum.request, is.ofType('function'));
+    test('request is a function.', done => {
+      assert.that(tutum.request).is.ofType('function');
       done();
     });
 
-    test('get is a function.', function (done) {
-      assert.that(tutum.request, is.ofType('function'));
+    test('get is a function.', done => {
+      assert.that(tutum.request).is.ofType('function');
       done();
     });
 
-    test('post is a function.', function (done) {
-      assert.that(tutum.request, is.ofType('function'));
+    test('post is a function.', done => {
+      assert.that(tutum.request).is.ofType('function');
       done();
     });
 
-    test('patch is a function.', function (done) {
-      assert.that(tutum.request, is.ofType('function'));
+    test('patch is a function.', done => {
+      assert.that(tutum.request).is.ofType('function');
       done();
     });
 
-    test('delete is a function.', function (done) {
-      assert.that(tutum.request, is.ofType('function'));
+    test('delete is a function.', done => {
+      assert.that(tutum.request).is.ofType('function');
       done();
     });
   });

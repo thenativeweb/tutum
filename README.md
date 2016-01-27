@@ -11,14 +11,14 @@ tutum is a wrapper around Tutum's API for Node.js.
 First you need to add a reference to tutum in your application.
 
 ```javascript
-var Tutum = require('tutum');
+const Tutum = require('tutum');
 ```
 
 Then, you need to call the `Tutum` constructor function to create a new instance. For that you need to specify your username and your API key. For details on where to get them, see the [Tutum documentation](https://docs.tutum.co/v2/api).
 
 ```javascript
 
-var tutum = new Tutum({
+const tutum = new Tutum({
   username: '...',
   apiKey: '...'
 });
@@ -27,19 +27,19 @@ var tutum = new Tutum({
 Now you can perform `GET`, `POST`, `PATCH` and `DELETE` requests against the Tutum API using the following helper functions.
 
 ```javascript
-tutum.get(path, options, function (err, res) {
+tutum.get(path, options, (err, res) => {
   // ...
 });
 
-tutum.post(path, options, function (err, res) {
+tutum.post(path, options, (err, res) => {
   // ...
 });
 
-tutum.patch(path, options, function (err, res) {
+tutum.patch(path, options, (err, res) => {
   // ...
 });
 
-tutum.delete(path, options, function (err, res) {
+tutum.delete(path, options, (err, res) => {
   // ...
 });
 ```
@@ -48,12 +48,12 @@ Refer to the [Tutum documentation](https://docs.tutum.co/v2/api/) to find the ap
 
 ```javascript
 // List all successful actions (https://docs.tutum.co/v2/api/#list-all-actions)
-tutum.get('/action', { state: 'Success' }, function (err, res) {
+tutum.get('/action', { state: 'Success' }, (err, res) => {
   // ...
 });
 
 // Start a container (https://docs.tutum.co/v2/api/#start-a-container)
-tutum.post('/container/[UUID]/start', function(err, res) {
+tutum.post('/container/[UUID]/start', (err, res) => {
   // ...
 });
 ```
@@ -62,14 +62,14 @@ Please also have a look at the [examples folder](https://github.com/goloroden/tu
 
 ## Running the build
 
-This module can be built using [Grunt](http://gruntjs.com/). Besides running the tests, this also analyses the code. To run Grunt, go to the folder where you have installed tutum and run `grunt`. You need to have [grunt-cli](https://github.com/gruntjs/grunt-cli) installed.
+To build this module use [roboter](https://www.npmjs.com/package/roboter).
 
-    $ grunt
+    $ bot build-server
 
 ## License
 
 The MIT License (MIT)
-Copyright (c) 2014-2015 the native web.
+Copyright (c) 2014-2016 the native web.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
